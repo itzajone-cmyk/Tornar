@@ -3,33 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tormat 3.0 - EdTech Hub</title>
+    <title>Tormat 3.1 - Hub Educativo</title>
     <style>
-        /* VARIABLES Y DISEÑO BASE */
         :root { --primary: #2563eb; --accent: #f59e0b; --eco: #059669; --danger: #ef4444; --bg: #f8fafc; --text: #1e293b; --card: #ffffff; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 50px; }
         * { box-sizing: border-box; }
 
-        /* NAVEGACIÓN */
         .navbar { background: var(--card); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
-        .logo { font-weight: 900; font-size: 1.5rem; color: var(--primary); letter-spacing: -0.5px; }
+        .logo { font-weight: 900; font-size: 1.5rem; color: var(--primary); }
         .badge { background: #e0f2fe; color: #0369a1; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; }
 
         .container { padding: 20px 5%; max-width: 800px; margin: auto; }
-        h2 { text-align: center; color: var(--text); font-size: 1.5rem; margin-top: 30px; margin-bottom: 20px;}
+        h2 { text-align: center; color: var(--text); font-size: 1.5rem; margin: 30px 0 20px; }
 
-        /* TARJETAS MODERNAS */
-        .card { background: var(--card); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); margin-bottom: 25px; border: 1px solid #e2e8f0; }
+        .card { background: var(--card); padding: 25px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; margin-bottom: 25px; }
         
-        /* FORMULARIOS Y BOTONES */
-        input, select { width: 100%; padding: 14px; margin: 8px 0 15px; border-radius: 12px; border: 2px solid #e2e8f0; font-size: 1rem; outline: none; transition: 0.3s; background: #f8fafc; }
+        input, select { width: 100%; padding: 14px; margin: 8px 0 15px; border-radius: 12px; border: 2px solid #e2e8f0; font-size: 1rem; outline: none; background: #f8fafc; }
         input:focus, select:focus { border-color: var(--primary); background: white; }
         
-        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; color: white; }
-        .btn:active { transform: scale(0.98); }
+        .btn { padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; color: white; width: 100%; font-size: 1rem; }
         .btn-primary { background: var(--primary); }
-        .btn-warning { background: var(--accent); color: #fff; }
+        .btn-warning { background: var(--accent); }
         .btn-eco { background: var(--eco); }
 
-        /* LISTA DEL CALENDARIO */
-        .task-item { background: #f1f5f9; padding: 15px; border-radius:
+        /* Calendario */
+        .task-item { background: #f1f5f9; padding: 15px; border-radius: 12px; margin-bottom: 15px; border-left: 5px solid var(--primary); }
+        .task-header { display: flex; justify-content: space-between; align-items: center; font-weight: bold; margin-bottom: 5px; }
+        .time-badge { font-size: 0.8rem; padding: 4px 8px; border-radius: 8px; font-weight: bold; }
+        .btn-row { display: flex; gap: 10px; margin-top: 15px; }
+
+        /* Modal Quiz */
+        #quiz-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.95); z-index: 200; display: none; justify-content: center; align-items: center; padding: 20px; }
+        .quiz-card { background: white; padding: 25px; border-radius: 20px; width: 100%; max-width: 400px; text-align: center; }
+        
+        .eco-lab { background: #ecfdf5; border-color: #dcfce7; text-align: center; }
+        #co2-display { font-size: 3rem; font-weight: 900; color: var(--eco); margin: 10px 0; display: block; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">TORMAT</div>
+    <div class="badge">V3.1 Estable</div>
+</nav>
+
+<div class="container">
+    
+    <h2>📅 Calendario Estudiantil</h2>
+    <div class="card">
+        <label>Fecha del Examen/Tarea:</label>
+        <input type="date" id="fecha-input">
+
+        <label>Materia a Estudiar:</label>
+        <select id="tema-input">
+            <option value="">Selecciona una materia...</option>
+            <option value="Quimica">Química: Equilibrio y pH</option>
+            <option value="Fisica">Física: Mecánica de Fluidos</option>
+            <option value="Literatura">Literatura: Movimientos Literarios</option>
+            <option value="Programacion">Programación: HTML y Web</option>
+            <option value="Matematicas">Matemáticas: Ecuaciones</option>
+        </select>
+
+        <button class="btn btn-primary" onclick="agregarTarea()">+ Guardar Tarea</button>
+    </div>
+
+    <div id="lista-tareas"></div>
+
+    <h2>🤖 Buscador Inteligente</h2>
+    <div class="card">
+        <input type="text" id="pregunta-ia" placeholder="Ej: Principio de Pascal">
+        <button class="btn btn-warning" onclick="resolverIA()">Buscar Respuesta</button>
+        <p id="resultado-ia" style="margin-top: 15px; font-weight: bold; color: var(--primary);"></p>
+    </div>
+
+    <h2>🍃 Carbon Lab</h2>
+    <div class="card eco-lab">
+        <p>¿Hojas de papel usadas hoy?</p>
+        <input type="number" id="papel" value="0" style="text-align:center;">
+        <button class="btn btn-eco" onclick="calcularCO2()">Calcular Impacto</button>
+        <div>
+            <span id="co2-display">0.00</span>
+            <span style="font-weight:bold; color: #334155;">kg de CO₂</span>
+        </div>
+    </div>
+</div>
+
+<div id="quiz-modal">
+    <div class="quiz-card">
+        <h3 id="quiz-titulo" style="color: var(--primary);">Modo Estudio</h3>
+        <p id="quiz-pregunta" style="font-size: 1.1rem; margin: 20px 0;"></p>
+        
+        <input type="text" id="respuesta-user" placeholder="Tu respuesta...">
+        <button class="btn btn-primary" onclick="revisarQuiz()">Comprobar</button>
+        
+        <p id="quiz-feedback" style="margin-top: 15px; font-weight: bold;"></p>
+        <button class="btn" style="background: #e2e8f0; color: #334155; margin-top:10px;" onclick="cerrarQuiz()">Volver</button>
+    </div>
+</div>
+
+<script>
+    // PREGUNTAS DEL QUIZ
+    const bancoQuizzes = {
+        'Quimica': { q: "Si el pH es menor a 7, la solución es...", a: "acida", err: "Las soluciones con pH menor a 7 son ácidas." },
+        'Fisica': { q: "¿Qué ecuación relaciona el área y la velocidad en un tubo (A1*v1 = A2*v2)?", a: "continuidad", err: "Es la ecuación de continuidad." },
+        'Literatura': { q: "¿Qué movimiento literario rompe las reglas tradicionales y busca la innovación extrema?", a: "vanguardismo", err: "Es el Vanguardismo." },
+        'Programacion': { q: "¿Qué lenguaje se usa para crear la estructura básica de una web?", a: "html", err: "HTML es el lenguaje de estructura." },
+        'Matematicas': { q: "Si x + 5 = 15, ¿cuánto vale x?", a: "10", err: "Pasa el 5 restando al 15 (15 - 5 = 10)." }
+    };
+
+    // SISTEMA DE GUARDADO (LOCALSTORAGE)
+    let tareas = JSON.parse(localStorage.getItem('tareas_tormat')) || [];
+
+    // INICIAR LA WEB
+    window.onload = function() {
+        actualizarCalendario();
+    };
+
+    function agregarTarea() {
+        const fecha = document.getElementById('fecha-input').value;
+        const tema = document.getElementById('tema-input').value;
+        
+        if(fecha === "" || tema === "") {
+            alert("Por favor, selecciona una fecha y una materia.");
+            return;
+        }
+        
+        const nuevaTarea = { id: Date.now(), fecha: fecha, tema: tema };
+        tareas.push(nuevaTarea);
+        localStorage.setItem('tareas_tormat', JSON.stringify(tareas));
+        actualizarCalendario();
+    }
+
+    function borrarTarea(id) {
+        tareas = tareas.filter(tarea => tarea.id !== id);
+        localStorage.setItem('tareas_tormat', JSON.stringify(tareas));
+        actualizarCalendario();
+    }
+
+    function actualizarCalendario() {
+        const lista = document.getElementById('lista-tareas');
+        lista.innerHTML = "";
+        
+        const hoy = new Date();
+        hoy.setHours(0,0,0,0);
+        
+        tareas.forEach(tarea => {
+            const fechaTarea = new Date(tarea.fecha + "T00:00:00");
+            const diferencia = fechaTarea - hoy;
+            const diasFaltantes = Math.ceil(diferencia / (1000 * 60 * 60 * 24));
+            
+            let alerta = diasFaltantes === 0 ? "¡Es hoy!" : diasFaltantes < 0 ? "Vencida" : `Faltan ${diasFaltantes} días`;
+            let colorBg = diasFaltantes <= 2 ? "#fee2e2" : "#dcfce7";
+            let colorTexto = diasFaltantes <= 2 ? "#b91c1c" : "#166534";
+
+            // Nombre bonito para mostrar
+            let nombreMostrar = document.querySelector(`option[value="${tarea.tema}"]`).innerText;
+
+            lista.innerHTML += `
+                <div class="task-item">
+                    <div class="task-header">
+                        <span>${nombreMostrar}</span>
+                        <span class="time-badge" style="background:${colorBg}; color:${colorTexto};">${alerta}</span>
+                    </div>
+                    <div style="color:#64748b; font-size:0.9rem;">Para el: ${tarea.fecha}</div>
+                    
+                    <div class="btn-row">
+                        <button class="btn btn-warning" style="flex:1;" onclick="abrirQuiz('${tarea.tema}')">💡 Estudiar</button>
+                        <button class="btn" style="background:#ef4444; flex:0.3;" onclick="borrarTarea(${tarea.id})">🗑️ Borrar</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // LÓGICA DEL QUIZ
+    let temaActual = "";
+
+    function abrirQuiz(tema) {
+        temaActual = tema;
+        document.getElementById('quiz-modal').style.display = 'flex';
+        document.getElementById('quiz-pregunta').innerText = bancoQuizzes[tema].q;
+        document.getElementById('respuesta-user').value = "";
+        document.getElementById('quiz-feedback').innerText = "";
+    }
+
+    function revisarQuiz() {
+        let inputUser = document.getElementById('respuesta-user').value.toLowerCase().trim();
+        // Quitar tildes para evitar errores
+        inputUser = inputUser.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
+        
+        const correcta = bancoQuizzes[temaActual].a;
+        const error = bancoQuizzes[temaActual].err;
+        const feedback = document.getElementById('quiz-feedback');
+
+        if(inputUser === correcta) {
+            feedback.innerText = "✅ ¡Correcto! Buen trabajo.";
+            feedback.style.color = "#16a34a";
+        } else {
+            feedback.innerText = "❌ Incorrecto. \nAyuda: " + error;
+            feedback.style.color = "#dc2626";
+        }
+    }
+
+    function cerrarQuiz() { 
+        document.getElementById('quiz-modal').style.display = 'none'; 
+    }
+
+    // BUSCADOR IA
+    function resolverIA() {
+        const q = document.getElementById('pregunta-ia').value.toLowerCase();
+        const res = document.getElementById('resultado-ia');
+        if(q.includes("pascal")) res.innerText = "Principio de Pascal: La presión ejercida sobre un fluido incompresible se transmite con igual intensidad en todas las direcciones.";
+        else if(q.includes("ph") || q.includes("equilibrio")) res.innerText = "El pH mide la acidez (0-6), neutralidad (7) o alcalinidad (8-14) de una solución.";
+        else res.innerText = "Intenta buscar 'Pascal' o 'pH'.";
+    }
+
+    // CARBON LAB
+    function calcularCO2() {
+        const num = document.getElementById('papel').value;
+        document.getElementById('co2-display').innerText = (num * 0.005).toFixed(3);
+    }
+</script>
+</body>
+</html>
