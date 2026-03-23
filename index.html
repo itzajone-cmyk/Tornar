@@ -3,142 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tormat: Academia y Carbon Lab</title>
+    <title>Tormat 3.0 - EdTech Hub</title>
     <style>
-        :root { --primary: #2563eb; --physics: #7c3aed; --chemistry: #db2777; --eco: #059669; --bg: #f1f5f9; --text: #1e293b; }
+        /* VARIABLES Y DISEÑO BASE */
+        :root { --primary: #2563eb; --accent: #f59e0b; --eco: #059669; --danger: #ef4444; --bg: #f8fafc; --text: #1e293b; --card: #ffffff; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 50px; }
+        * { box-sizing: border-box; }
+
+        /* NAVEGACIÓN */
+        .navbar { background: var(--card); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .logo { font-weight: 900; font-size: 1.5rem; color: var(--primary); letter-spacing: -0.5px; }
+        .badge { background: #e0f2fe; color: #0369a1; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; }
+
+        .container { padding: 20px 5%; max-width: 800px; margin: auto; }
+        h2 { text-align: center; color: var(--text); font-size: 1.5rem; margin-top: 30px; margin-bottom: 20px;}
+
+        /* TARJETAS MODERNAS */
+        .card { background: var(--card); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); margin-bottom: 25px; border: 1px solid #e2e8f0; }
         
-        .navbar { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
-        .logo { font-weight: 800; font-size: 1.5rem; color: var(--primary); }
-
-        .container { padding: 20px 5%; max-width: 900px; margin: auto; }
-        h2 { text-align: center; margin-top: 20px; }
-
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
-        .card { background: white; padding: 25px; border-radius: 24px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        /* FORMULARIOS Y BOTONES */
+        input, select { width: 100%; padding: 14px; margin: 8px 0 15px; border-radius: 12px; border: 2px solid #e2e8f0; font-size: 1rem; outline: none; transition: 0.3s; background: #f8fafc; }
+        input:focus, select:focus { border-color: var(--primary); background: white; }
         
-        /* Botones que activan cámara */
-        .btn-camera { display: block; width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 10px; color: white; text-align: center; box-sizing: border-box; }
-        .btn-math { background: var(--primary); }
-        .btn-phys { background: var(--physics); }
-        .btn-chem { background: var(--chemistry); }
-        .hidden { display: none; }
+        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; color: white; }
+        .btn:active { transform: scale(0.98); }
+        .btn-primary { background: var(--primary); }
+        .btn-warning { background: var(--accent); color: #fff; }
+        .btn-eco { background: var(--eco); }
 
-        /* Pantalla de Escaneo */
-        #zona-estudio { background: #1e293b; color: white; padding: 25px; border-radius: 20px; margin-top: 30px; }
-        .scan-container { height: 60px; position: relative; overflow: hidden; background: #334155; border-radius: 10px; margin-bottom: 15px; }
-        .scan-line { width: 100%; height: 3px; background: #22d3ee; position: absolute; box-shadow: 0 0 15px #22d3ee; animation: scanMove 2s infinite linear; }
-        
-        @keyframes scanMove { 0% { top: 0; } 100% { top: 100%; } }
-
-        /* Carbon Lab */
-        .eco-card { background: #ecfdf5; border: 2px solid #dcfce7; margin-top: 40px; padding: 25px; border-radius: 24px; text-align: center; }
-        input[type="number"] { width: 80%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 1.2rem; text-align: center; }
-        #co2-display { font-size: 3.5rem; font-weight: 800; color: var(--eco); display: block; }
-    </style>
-</head>
-<body>
-
-<nav class="navbar">
-    <div class="logo">TORMAT</div>
-    <div style="font-size: 0.8rem; background: #e0f2fe; color: #0369a1; padding: 5px 10px; border-radius: 20px; font-weight: bold;">v2.1 Active Cam</div>
-</nav>
-
-<div class="container">
-    <h2>Academia Digital</h2>
-    <div class="grid">
-        <div class="card">
-            <div style="font-size:3rem">📐</div>
-            <h3>Matemáticas</h3>
-            <label for="cam-math" class="btn-camera btn-math">📸 Abrir Cámara</label>
-            <input type="file" id="cam-math" accept="image/*" capture="environment" class="hidden" onchange="procesarFoto('Matemáticas')">
-        </div>
-
-        <div class="card">
-            <div style="font-size:3rem">⚛️</div>
-            <h3>Física</h3>
-            <label for="cam-phys" class="btn-camera btn-phys">📸 Abrir Cámara</label>
-            <input type="file" id="cam-phys" accept="image/*" capture="environment" class="hidden" onchange="procesarFoto('Física')">
-        </div>
-
-        <div class="card">
-            <div style="font-size:3rem">🧪</div>
-            <h3>Química</h3>
-            <label for="cam-chem" class="btn-camera btn-chem">📸 Abrir Cámara</label>
-            <input type="file" id="cam-chem" accept="image/*" capture="environment" class="hidden" onchange="procesarFoto('Química')">
-        </div>
-    </div>
-
-    <div id="zona-estudio" class="hidden">
-        <div id="loading">
-            <div class="scan-container"><div class="scan-line"></div></div>
-            <p style="text-align:center">Analizando ejercicio de <span id="materia-label"></span>...</p>
-        </div>
-        <div id="resultado" class="hidden">
-            <h4 style="color: #22d3ee">Solución sugerida:</h4>
-            <p id="sol-text" style="background:#0f172a; padding:15px; border-radius:10px; font-family:monospace"></p>
-            <hr style="border:0.1px solid #334155; margin:20px 0">
-            <h4>Prueba tu conocimiento:</h4>
-            <p id="quiz-text"></p>
-            <input type="text" id="user-ans" placeholder="Tu respuesta..." style="width:100%; padding:10px; border-radius:8px; border:none; margin-bottom:10px">
-            <button onclick="check()" style="width:100%; padding:12px; background:var(--eco); color:white; border:none; border-radius:10px; font-weight:bold">Validar</button>
-            <p id="feedback" style="margin-top:10px; font-weight:bold"></p>
-        </div>
-    </div>
-
-    <div class="eco-card">
-        <h3 style="color: var(--eco); margin:0">🍃 Carbon Lab</h3>
-        <p>¿Hojas de papel usadas hoy?</p>
-        <input type="number" id="hojas" value="0">
-        <button onclick="huella()" style="width:100%; padding:12px; background:var(--eco); color:white; border:none; border-radius:10px; font-weight:bold">Calcular Huella</button>
-        <div style="margin-top:20px">
-            <span id="co2-display">0.00</span>
-            <p style="margin:0; font-weight:bold; color: #475569">kg de CO₂</p>
-        </div>
-    </div>
-</div>
-
-<script>
-    const db = {
-        'Matemáticas': { s: "Detectado: 4x = 16. Paso 1: Divide 16/4. Resultado: x = 4", q: "¿Cuánto es x en 2x = 10?", a: "5", h: "El 2 pasa dividiendo al 10." },
-        'Física': { s: "Fórmula: F = m*a. Para m=5kg y a=2m/s², F = 10N", q: "¿Fuerza si m=2kg y a=3m/s²?", a: "6", h: "Multiplica masa (2) por aceleración (3)." },
-        'Química': { s: "Molécula: CO2. Masa molar: 44g/mol", q: "¿Símbolo del Oro?", a: "Au", h: "Viene del latín 'Aurum'." }
-    };
-
-    let actual = "";
-
-    function procesarFoto(m) {
-        actual = m;
-        document.getElementById('zona-estudio').classList.remove('hidden');
-        document.getElementById('loading').classList.remove('hidden');
-        document.getElementById('resultado').classList.add('hidden');
-        document.getElementById('materia-label').innerText = m;
-        document.getElementById('feedback').innerText = "";
-        document.getElementById('user-ans').value = "";
-
-        setTimeout(() => {
-            document.getElementById('loading').classList.add('hidden');
-            document.getElementById('resultado').classList.remove('hidden');
-            document.getElementById('sol-text').innerText = db[m].s;
-            document.getElementById('quiz-text').innerText = db[m].q;
-        }, 2500);
-    }
-
-    function check() {
-        const val = document.getElementById('user-ans').value.trim();
-        const f = document.getElementById('feedback');
-        if(val.toLowerCase() === db[actual].a.toLowerCase()) {
-            f.innerText = "✅ ¡Correcto!"; f.style.color = "#4ade80";
-        } else {
-            f.innerText = "❌ No. Ayuda: " + db[actual].h; f.style.color = "#f87171";
-        }
-    }
-
-    function huella() {
-        const h = document.getElementById('hojas').value;
-        document.getElementById('co2-display').innerText = (h * 0.005).toFixed(3);
-    }
-</script>
-
-</body>
-</html>
+        /* LISTA DEL CALENDARIO */
+        .task-item { background: #f1f5f9; padding: 15px; border-radius:
